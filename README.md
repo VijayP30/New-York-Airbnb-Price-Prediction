@@ -19,7 +19,6 @@ Accuracy and Loss are shown below:
 ![accuracy image](https://github.com/pvijay03/CSE151A-Project/blob/af6042741cdc1a28df0813f154a91280ea3d7fcd/accuracy.png)
 ![accuracy image](https://github.com/pvijay03/CSE151A-Project/blob/af6042741cdc1a28df0813f154a91280ea3d7fcd/loss.png)
 
-
 ## The Fitting Chart - 
 ![fitting chart image](https://github.com/pvijay03/CSE151A-Project/blob/4b803b456519366171c458ba771a6abf689031a2/fittingchart.png)
 *- Edwin Solares, CSE 151A*
@@ -38,4 +37,7 @@ Overall, our current model sits on the left side of the fitting curve, and we ho
 2. For the second of our two upcoming models, we will use our most effective iteration from the first new model and change the input value. One of our beliefs for why our current model is performing poorly is because we are giving our model too much data to sift through and we don't have a complex enough model to deal with such data. Hence, our second model will involve limiting the input data so that the model isn't overloaded.
 
 The conclusion of our first model is that there is lots of room for improvement. Our model is likely struggling because we do not have a binary classification anymore, we are dealing with data that can be classified into 5 different groups. Hence it is very likely that our model isn't able to differenciate our input data well enough to create 5 distinct groups. In order to improve it, we can enhance the model by adding more complex arrangements between layers. We can also increase the number of layers or edit the input data so that we are classifying the listing based on fewer less-vague features.
+
+## Second Model - 
+After evaluating the data being used in the first model, we realized that we were not encoding correctly, and that was part of the reason the accuracy was so poor. Along with creating bins, we had to one-hot encode the data and change the output layer to size 5, for 5 bins. Once we did this, we used hyperparameter tuning along with RandomSearch to determine the best parameters for our model. We also tested with different numbers of layers to see if there would be significant improvement in accuracy and loss. There was not. However, using RandomSearch hyperparameter tuning, we were able to bring up our accuracy significantly to 0.4209 with a loss of 0.1363. The accuracy still is not great, but it is much better than what we were previously seeing.
 
