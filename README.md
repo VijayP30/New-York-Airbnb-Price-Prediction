@@ -17,7 +17,7 @@ Accuracy and Loss are shown below:
 
 
 ![accuracy image](https://github.com/pvijay03/CSE151A-Project/blob/af6042741cdc1a28df0813f154a91280ea3d7fcd/accuracy.png)
-![accuracy image](https://github.com/pvijay03/CSE151A-Project/blob/af6042741cdc1a28df0813f154a91280ea3d7fcd/loss.png)
+![loss image](https://github.com/pvijay03/CSE151A-Project/blob/af6042741cdc1a28df0813f154a91280ea3d7fcd/loss.png)
 
 ## The Fitting Chart - 
 ![fitting chart image](https://github.com/pvijay03/CSE151A-Project/blob/4b803b456519366171c458ba771a6abf689031a2/fittingchart.png)
@@ -40,4 +40,8 @@ The conclusion of our first model is that there is lots of room for improvement.
 
 ## Second Model - 
 After evaluating the data being used in the first model, we realized that we were not encoding correctly, and that was part of the reason the accuracy was so poor. Along with creating bins, we had to one-hot encode the data and change the output layer to size 5, for 5 bins. Once we did this, we used hyperparameter tuning along with RandomSearch to determine the best parameters for our model. We also tested with different numbers of layers to see if there would be significant improvement in accuracy and loss. There was not. However, using RandomSearch hyperparameter tuning, we were able to bring up our accuracy significantly to 0.4209 with a loss of 0.1363. The accuracy still is not great, but it is much better than what we were previously seeing.
+
+Accuracy and Loss for the new model are shown below:
+![accuracy image](https://github.com/pvijay03/CSE151A-Project/blob/af6042741cdc1a28df0813f154a91280ea3d7fcd/model2accuracy.png)
+![loss image](https://github.com/pvijay03/CSE151A-Project/blob/af6042741cdc1a28df0813f154a91280ea3d7fcd/model2loss.png)
 
