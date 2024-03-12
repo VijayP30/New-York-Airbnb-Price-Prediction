@@ -59,3 +59,21 @@ After looking at what we did wrong for the first and second model, we made some 
 
 This project allowed us to understand better and play around with the techniques we were taught in class. Additionally, in trying to improve our model over the three different iterations, we were forced to look past the scope of this class to understand different ways of processing data and different types of models we can create; allowing us to peek into what the field of ML/AI holds. One main lesson we learned, if we were going to do this project again, is to find a dataset that does not have a large number of independent variables, as these variables (some of which are just different representations of other variables in our data), only served to confuse our model by adding unnecessary complexity to the features. This creates a less clear distinction between the different prediction classes, reducing our model accuracy. While this rule of thumb can be followed for any other machine learning project, the effects were especially prevalent with our dataset of choice. Another lesson we learned, which can be applied to any general machine learning project, is not to use every independent variable in our prediction right off the bat; we should first see how different subsets of our features can be used in the prediction (so we get a better understanding of how each feature independently affects our result), before combining multiple/all features into a feature map. Overall, our group believed that this project was a great learning experience and taught us many practical skills that we can employ for future ML models/projects.
 
+## Collaboration - 
+### Pranav Vijay - 
+ - Helped with finding the data
+ - Coded the preprocessing and first two models
+ - Did the final write up
+### Aryan Desai - 
+ - Helped with finding the data
+ - Coded the preprocessing and first two models
+ - Did the final write up
+### Nishanth Arumugam - 
+ - Helped with finding the data
+ - Answered all the write-up questions about milestones 1,2, and 3
+ - Created the final models (iteration 3)
+### Siddhant Kumar - 
+ - Helped with finding the data
+ - Answered the write-up questions about milestones 1,2, and 3
+ - Created the final models (iteration 3)
+
