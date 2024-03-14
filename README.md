@@ -2,6 +2,10 @@
 
 [Link to Notebook](https://colab.research.google.com/drive/1w0hO2r5xkVYwURdNq6i21P-RxChRXZqR)
 
+## Introduction -
+As one of the most populated cities in the world, New York City residents frequently struggle to find housing at affordable prices. This problem persists when short term rental units are desired for those interning in the city or searching for temporary housing whilst counting the arduous search for a permanent residence. New tenants often struggle with determining whether landlord pricing is considered fair, as the high demand for housing makes it difficult to determine if a rental unit is overpriced. To help address this issue, our project aims too develop a machine learning model trained on AirBNB rental data in order to determine if a property is priced fairly. Using features such as the neighborhood, asking price, and size of the unit, we plan to train the model to identify whether a potential tenant is getting a fair deal, represented by a property that is priced fairly given its features and location compared to other properties in the area. To accomplish this, a model framework based on a neural network will be used, with experimentation focused on number and features of different layers. A good predictive model will not only enable those searching for rental properties to determine if they are finding fair rental rates, but will also guide AirBNB hosts with regards to the pricing schema for their rental properties. 
+
+
 ## Data Exploration - 
 Our data exploration allowed us to explore multiple different correlations and points of information about our data. Our data contains about 456k observations, with 22 different columns and 20k rows. We then explored the distribution for each of the data's columns. Then we looked at the geographical distribution of our data, specifically what neighborhoods come up with most within the different NYC boroughs. Finally, created a pairplot to visually represent any underlying trends between the variables.
 
