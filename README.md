@@ -5,14 +5,14 @@
 ## Introduction -
 As one of the most populated cities in the world, New York City residents frequently struggle to find housing at affordable prices. This problem persists when short term rental units are desired for those interning in the city or searching for temporary housing whilst counting the arduous search for a permanent residence. New tenants often struggle with determining whether landlord pricing is considered fair, as the high demand for housing makes it difficult to determine if a rental unit is overpriced. To help address this issue, our project aims too develop a machine learning model trained on AirBNB rental data in order to determine if a property is priced fairly. Using features such as the neighborhood, asking price, and size of the unit, we plan to train the model to identify whether a potential tenant is getting a fair deal, represented by a property that is priced fairly given its features and location compared to other properties in the area. To accomplish this, a model framework based on a neural network will be used, with experimentation focused on number and features of different layers. A good predictive model will not only enable those searching for rental properties to determine if they are finding fair rental rates, but will also guide AirBNB hosts with regards to the pricing schema for their rental properties. 
 
-
-## Data Exploration - 
+## Methods - 
+### Data Exploration - 
 Our data exploration allowed us to explore multiple different correlations and points of information about our data. Our data contains about 456k observations, with 22 different columns and 20k rows. We then explored the distribution for each of the data's columns. Then we looked at the geographical distribution of our data, specifically what neighborhoods come up with most within the different NYC boroughs. Finally, created a pairplot to visually represent any underlying trends between the variables.
 
-## Preprocessing - 
+### Preprocessing - 
 To preprocess our dataset, which contains information about NYC Airbnbs, we plan on examining the data for any missing values, duplicates, or outliers, and either scale them appropriately or discard those rows entirely (as they are incomplete). We will then encode categorical variables such as neighborhood and room type using techniques like one-hot encoding or label encoding. Next, we will standardize numerical features using techniques like min-max scaling to ensure consistency for the model. Finally, if we have any text data, such as the title of the listing or the names of the landlord, we may not use those columns as they may have no correlation with the price of the listing, or we may use text tokenization to include those features in our model. We will split the data into training and testing so it can be effectively create our model.
 
-## First Model - 
+### Model 1 - 
 Our current model is a sequential model with 6 dense layers (one of which is the input layer). Our activations are alternating tanh and relu for each of these layers. Except the last layer has a softmax activation function. We also introduced dropout to our layers to ensure even training to create a more even model. Finally we used an adam optimizer with our model.
 
 This model has a training accuracy of 0.1974, and a testing accuracy of 0.2031. While these accuracies aren't great, we intend on creating more complex models in future iterations which will, hopefully, perform better.
@@ -23,7 +23,7 @@ Accuracy and Loss are shown below:
 ![accuracy image](https://github.com/pvijay03/CSE151A-Project/blob/af6042741cdc1a28df0813f154a91280ea3d7fcd/accuracy.png)
 ![loss image](https://github.com/pvijay03/CSE151A-Project/blob/af6042741cdc1a28df0813f154a91280ea3d7fcd/loss.png)
 
-## The Fitting Chart - 
+### The Fitting Chart for Model 1 - 
 ![fitting chart image](https://github.com/pvijay03/CSE151A-Project/blob/4b803b456519366171c458ba771a6abf689031a2/fittingchart.png)
 *- Edwin Solares, CSE 151A*
 
@@ -36,13 +36,13 @@ Now, to look at the x-axis, we can look into the layers of the model itself. We 
 Overall, our current model sits on the left side of the fitting curve, and we hope to continue optimizing towards the middle of the chart.
 
 
-### Next Two Models - 
+#### Next Two Models - 
 1. For the first of our two upcoming models, we will play around with the number of layers, and the different activations functions of each layer. This will give us an idea of whether the model as a whole is problematic or if certain hyperparameters just need tuning.
 2. For the second of our two upcoming models, we will use our most effective iteration from the first new model and change the input value. One of our beliefs for why our current model is performing poorly is because we are giving our model too much data to sift through and we don't have a complex enough model to deal with such data. Hence, our second model will involve limiting the input data so that the model isn't overloaded.
 
 The conclusion of our first model is that there is lots of room for improvement. Our model is likely struggling because we do not have a binary classification anymore, we are dealing with data that can be classified into 5 different groups. Hence it is very likely that our model isn't able to differenciate our input data well enough to create 5 distinct groups. In order to improve it, we can enhance the model by adding more complex arrangements between layers. We can also increase the number of layers or edit the input data so that we are classifying the listing based on fewer less-vague features.
 
-## Second Model - 
+### Model 2 - 
 After reviewing the data utilized in our initial model, we identified an issue with encoding which contributed to its poor accuracy. To address this, we implemented one-hot encoding alongside bin creation, adjusting the output layer to accommodate five bins. Subsequently, employing hyperparameter tuning through RandomSearch, we optimized our model's parameters. Additionally, we experimented with varying numbers of layers to explore potential enhancements in accuracy and loss, albeit without notable success. Nevertheless, leveraging RandomSearch hyperparameter tuning significantly improved our accuracy to 0.4209 with a corresponding loss of 0.1363. While still not optimal, this marks a notable improvement from our previous results.
 
 Accuracy and Loss for the new model are shown below:
@@ -50,10 +50,10 @@ Accuracy and Loss for the new model are shown below:
 ![accuracy image](https://github.com/pvijay03/CSE151A-Project/blob/main/model2acurracy.png)
 ![loss image](https://github.com/pvijay03/CSE151A-Project/blob/main/model2loss.png)
 
-### Next Model - 
+#### Next Model - 
 While this model was significantly more accurate than our first iteration, it still leaves a lot to be desired. For our third version we are going to implement a group of changes in an attempt to increase the accuracy of our model. First, we are going to try ensemble learnings, where we utilize the predictions of multiple models to create a system that is greater than the sum of its parts. We will create three different models, each one will be trained on a different part of the dataset, so it will be the "expert" of that part. By combining the predictions of these three models we can get a potentially more accurate prediction. We can also use a method of validation such as K-fold cross validation to utilize every datapoint for testing and training. This will allow us to maximize the amount of data our model is introduced to. Finally, as a last resort, we can use data augmentation to increase the amount of data our model is trained/tested on. We believe that by combining some or all of these methods we will be able to effectively increase our model's accuracy.
 
-## Third (Final) Model - 
+### Model 3 (Final) - 
 After looking at what we did wrong for the first and second model, we made some key changes to our third model in an attempt to make it more accurate. First, we used data augmentation to give our model more training/testing data. We did this by taking our training/testing data, combining them and duplicating them, giving the model twice the amount of points to use. In the future we can use more fine-tuned versions of augmentation, where we are able to create new data instead of duplicating old data. We also created three new models, two of these were unique and were trained on all of the data, giving slightly different predictions on the pricing. The final model used the results of the other models to come up with the final prediction. We also utilized some of the parameters we found in our hyperparameter tuning from the previous model. All of this made little to no change in our accuracy. Our final model accuracy was to 0.419 with a loss of 0.158.
 
 ![accuracy image](https://github.com/pvijay03/CSE151A-Project/blob/main/model3accuracy.png)
