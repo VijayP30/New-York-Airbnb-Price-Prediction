@@ -260,6 +260,7 @@ Data Distribution:
 Neighborhood Exploration:
 
 Pairplot:
+![image](https://github.com/pvijay03/CSE151A-Project/assets/97484172/5cd6127a-e9d8-4a35-8cc2-2e84f85661eb)
 
 ### Preprocessing -
 Cleaning Data:
