@@ -255,7 +255,17 @@ final_model = Sequential([
 
 ## Results - 
 ### Data Exploration - 
+Data Distribution:
+
+Neighborhood Exploration:
+
+Pairplot:
+
 ### Preprocessing -
+Cleaning Data:
+
+Scaling, Encoding, and Imputing (Transformations):
+
 ### Model 1 - 
 This model has a training accuracy of 0.1974, and a testing accuracy of 0.2031. While these accuracies aren't great, we intend on creating more complex models in future iterations which will, hopefully, perform better.
 
