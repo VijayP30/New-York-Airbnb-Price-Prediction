@@ -56,7 +56,7 @@ While this model was significantly more accurate than our first iteration, it st
 ## Third (Final) Model - 
 After looking at what we did wrong for the first and second model, we made some key changes to our third model in an attempt to make it more accurate. First, we used data augmentation to give our model more training/testing data. We did this by taking our training/testing data, combining them and duplicating them, giving the model twice the amount of points to use. In the future we can use more fine-tuned versions of augmentation, where we are able to create new data instead of duplicating old data. We also created three new models, two of these were unique and were trained on all of the data, giving slightly different predictions on the pricing. The final model used the results of the other models to come up with the final prediction. We also utilized some of the parameters we found in our hyperparameter tuning from the previous model. All of this made little to no change in our accuracy. Our final model accuracy was to 0.419 with a loss of 0.158.
 
-![accuracy image](https://github.com/pvijay03/CSE151A-Project/blob/main/model3acurracy.png)
+![accuracy image](https://github.com/pvijay03/CSE151A-Project/blob/main/model3accuracy.png)
 ![loss image](https://github.com/pvijay03/CSE151A-Project/blob/main/model3loss.png)
 
 ## Discussion - 
