@@ -9,8 +9,85 @@ As one of the most populated cities in the world, New York City residents freque
 ### Data Exploration - 
 Our data exploration allowed us to explore multiple different correlations and points of information about our data. Our data contains about 456k observations, with 22 different columns and 20k rows. We then explored the distribution for each of the data's columns. Then we looked at the geographical distribution of our data, specifically what neighborhoods come up with most within the different NYC boroughs. Finally, created a pairplot to visually represent any underlying trends between the variables.
 
+Data Distribution:
+```
+print("Summary Statistics for Numerical Features in Dataset:")
+print(rawDataFrame.describe())
+```
+
+Neighborhood Exploration:
+```
+unique_neighborhood_groups = rawDataFrame['neighbourhood_group'].unique()
+
+for neighborhood_group in unique_neighborhood_groups:
+    plt.figure(figsize=(12, 6))
+    neighborhood_data = rawDataFrame[rawDataFrame['neighbourhood_group'] == neighborhood_group]
+    unique_neighborhoods = neighborhood_data['neighbourhood'].unique()
+    x_ticks = range(len(unique_neighborhoods))
+    plt.bar(x_ticks, neighborhood_data['neighbourhood'].value_counts(), width=0.8)
+    plt.title(f'Neighborhoods in {neighborhood_group}')
+    plt.xlabel('Neighborhood')
+    plt.ylabel('Frequency')
+    plt.xticks(x_ticks, unique_neighborhoods, rotation=90, ha='right')
+    plt.tight_layout()
+    plt.show()
+```
+
+Pairplot:
+```
+sns.pairplot(rawDataFrame, hue='neighbourhood_group')
+plt.show()
+```
+
 ### Preprocessing - 
 To preprocess our dataset, which contains information about NYC Airbnbs, we plan on examining the data for any missing values, duplicates, or outliers, and either scale them appropriately or discard those rows entirely (as they are incomplete). We will then encode categorical variables such as neighborhood and room type using techniques like one-hot encoding or label encoding. Next, we will standardize numerical features using techniques like min-max scaling to ensure consistency for the model. Finally, if we have any text data, such as the title of the listing or the names of the landlord, we may not use those columns as they may have no correlation with the price of the listing, or we may use text tokenization to include those features in our model. We will split the data into training and testing so it can be effectively create our model.
+
+Cleaning Data:
+```
+leanedDataFrame = rawDataFrame[rawDataFrame['rating'] != 'No rating']
+cleanedDataFrame = cleanedDataFrame[cleanedDataFrame['rating'] != 'New ']
+
+# Replace Studio in bedrooms column with 1
+cleanedDataFrame['bedrooms'] = cleanedDataFrame['bedrooms'].replace('Studio', 1)
+
+# Replace Not specified in baths column with 0
+cleanedDataFrame['baths'] = cleanedDataFrame['baths'].replace('Not specified', 0)
+
+# Separate target variable and features
+X = cleanedDataFrame.drop(columns=['price'])
+y = cleanedDataFrame['price']
+
+
+# Set numerical and categorical features
+numerical_cols = ['rating', 'bedrooms', 'beds', 'baths']
+categorical_cols = ['neighbourhood_group', 'room_type']
+```
+
+Scaling, Encoding, and Imputing (Transformations):
+```
+# Define the transformation pipelines
+
+# Simple Imputer, Polynomial Feature Expansion, and Standard Scaler
+numerical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='mean')),
+    ('poly', PolynomialFeatures(degree=2, include_bias=False)),
+    ('scaler', StandardScaler())
+])
+
+# Simple Imputer and One-Hot Encoding
+categorical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('onehot', OneHotEncoder())
+])
+
+# Apply the pipelines to the preprocessor and transform the data
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numerical_transformer, numerical_cols),
+        ('cat', categorical_transformer, categorical_cols)
+    ])
+```
+
 
 ### Example Fitting Chart for Models - 
 ![fitting chart image](https://github.com/pvijay03/CSE151A-Project/blob/4b803b456519366171c458ba771a6abf689031a2/fittingchart.png)
@@ -18,6 +95,28 @@ To preprocess our dataset, which contains information about NYC Airbnbs, we plan
 
 ### Model 1 - 
 Our current model is a sequential model with 6 dense layers (one of which is the input layer). Our activations are alternating tanh and relu for each of these layers. Except the last layer has a softmax activation function. We also introduced dropout to our layers to ensure even training to create a more even model. Finally we used an adam optimizer with our model.
+```
+model = Sequential()
+model.add(Dense(1024, activation='tanh', kernel_regularizer=regularizers.l2(0.01), input_shape=(X_train.shape[1],)))
+model.add(BatchNormalization())
+model.add(Dropout(0.5))
+model.add(Dense(512, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
+model.add(BatchNormalization())
+model.add(Dropout(0.5))
+model.add(Dense(256, activation='tanh', kernel_regularizer=regularizers.l2(0.01)))
+model.add(BatchNormalization())
+model.add(Dropout(0.5))
+model.add(Dense(128, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
+model.add(BatchNormalization())
+model.add(Dropout(0.5))
+model.add(Dense(64, activation='tanh', kernel_regularizer=regularizers.l2(0.01)))
+model.add(BatchNormalization())
+model.add(Dropout(0.5))
+
+model.add(Dense(1, activation='softmax'))
+
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+```
 
 #### Next Two Models - 
 1. For the first of our two upcoming models, we will play around with the number of layers, and the different activations functions of each layer. This will give us an idea of whether the model as a whole is problematic or if certain hyperparameters just need tuning.
@@ -28,11 +127,131 @@ The conclusion of our first model is that there is lots of room for improvement.
 ### Model 2 - 
 After reviewing the data utilized in our initial model, we identified an issue with encoding which contributed to its poor accuracy. To address this, we implemented one-hot encoding alongside bin creation, adjusting the output layer to accommodate five bins. Subsequently, employing hyperparameter tuning through RandomSearch, we optimized our model's parameters. Additionally, we experimented with varying numbers of layers to explore potential enhancements in accuracy and loss, albeit without notable success.
 
+New One-Hot Encoding:
+```
+one_hot_encoded_train = pd.get_dummies(y_train)
+one_hot_encoded_test = pd.get_dummies(y_test)
+```
+Hyperparameter Tuning:
+```
+def build_model(hp):
+  model = Sequential([
+      Dense(units=hp.Int('units_1', min_value=0, max_value=1024, step=1), activation=hp.Choice('activation_1', values=['relu', 'tanh', 'sigmoid']), input_shape=(X_train.shape[1],)),
+      BatchNormalization(),
+      Dropout(rate=hp.Float('dropout_1', min_value=0.2, max_value=0.8, step=0.1)),
+      Dense(units=hp.Int('units_2', min_value=0, max_value=512, step=1), activation=hp.Choice('activation_2', values=['relu', 'tanh', 'sigmoid'])),
+      BatchNormalization(),
+      Dropout(rate=hp.Float('dropout_2', min_value=0.2, max_value=0.8, step=0.1)),
+      Dense(units=hp.Int('units_3', min_value=0, max_value=256, step=1), activation=hp.Choice('activation_3', values=['relu', 'tanh', 'sigmoid'])),
+      BatchNormalization(),
+      Dropout(rate=hp.Float('dropout_3', min_value=0.2, max_value=0.8, step=0.1)),
+      Dense(units=hp.Int('units_4', min_value=0, max_value=64, step=1), activation=hp.Choice('activation_4', values=['relu', 'tanh', 'sigmoid'])),
+      BatchNormalization(),
+      Dropout(rate=hp.Float('dropout_4', min_value=0.2, max_value=0.8, step=0.1)),
+      Dense(units=one_hot_encoded_train.shape[1], activation=hp.Choice('activation_5', values=['softmax', 'relu', 'tanh', 'sigmoid']))
+  ])
+  # Choice of loss function and learning rate
+  loss_function = hp.Choice('loss', values=['mean_squared_error', 'binary_crossentropy', 'categorical_crossentropy'])
+  learning_rate = hp.Float("lr", min_value=1e-4, max_value=1e-2, sampling="log")
+
+  # Compile the model
+  model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate),
+                loss=loss_function,
+                metrics=['accuracy'])
+  return model
+
+tuner = keras_tuner.RandomSearch(
+    hypermodel=build_model,
+    objective="val_accuracy",
+    max_trials=3,
+    executions_per_trial=2,
+    overwrite=True,
+    directory="hw2",
+    project_name="hyperparamter_tuning_results"
+)
+```
+
 #### Next Model - 
 While this model was significantly more accurate than our first iteration, it still leaves a lot to be desired. For our third version we are going to implement a group of changes in an attempt to increase the accuracy of our model. First, we are going to try ensemble learnings, where we utilize the predictions of multiple models to create a system that is greater than the sum of its parts. We will create three different models, each one will be trained on a different part of the dataset, so it will be the "expert" of that part. By combining the predictions of these three models we can get a potentially more accurate prediction. We can also use a method of validation such as K-fold cross validation to utilize every datapoint for testing and training. This will allow us to maximize the amount of data our model is introduced to. Finally, as a last resort, we can use data augmentation to increase the amount of data our model is trained/tested on. We believe that by combining some or all of these methods we will be able to effectively increase our model's accuracy.
 
 ### Model 3 (Final) - 
 After looking at what we did wrong for the first and second model, we made some key changes to our third model in an attempt to make it more accurate. First, we used data augmentation to give our model more training/testing data. We did this by taking our training/testing data, combining them and duplicating them, giving the model twice the amount of points to use. In the future we can use more fine-tuned versions of augmentation, where we are able to create new data instead of duplicating old data. We also created three new models, two of these were unique and were trained on all of the data, giving slightly different predictions on the pricing.
+
+Setup for Cross Validation:
+```
+X = np.concatenate((X_train, X_test), axis=0)
+Y_one_hot = np.concatenate((one_hot_encoded_train, one_hot_encoded_test), axis=0)
+
+X_augmented = np.repeat(X, 2, axis=0)
+Y_one_hot_augmented = np.repeat(Y_one_hot, 2, axis=0)
+
+split_index = len(X_train)*2
+
+x_train_augmented = X_augmented[:split_index]
+x_test_augmented = X_augmented[split_index:]
+y_train_one_hot_augmented = Y_one_hot_augmented[:split_index]
+y_test_one_hot_augmented = Y_one_hot_augmented[split_index:]
+```
+
+First Model:
+```
+first_model = Sequential([
+      Dense(units=best_hyperparameters.get('units_1'), activation=best_hyperparameters.get('activation_1'), input_shape=(X_train.shape[1],)),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_1')),
+      Dense(units=best_hyperparameters.get('units_2'), activation=best_hyperparameters.get('activation_2')),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_2')),
+      Dense(units=best_hyperparameters.get('units_3'), activation=best_hyperparameters.get('activation_3')),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_3')),
+      Dense(units=best_hyperparameters.get('units_4'), activation=best_hyperparameters.get('activation_4')),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_4')),
+      Dense(units=one_hot_encoded_train.shape[1], activation=best_hyperparameters.get('activation_5'))
+    ])
+```
+
+Second Model:
+```
+second_model = Sequential([
+      Dense(units=best_hyperparameters.get('units_1'), activation=best_hyperparameters.get('activation_1'), input_shape=(X_train.shape[1],)),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_1')),
+      Dense(units=best_hyperparameters.get('units_2'), activation=best_hyperparameters.get('activation_2')),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_2')),
+      Dense(units=best_hyperparameters.get('units_3'), activation=best_hyperparameters.get('activation_2')),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_2')),
+      Dense(units=best_hyperparameters.get('units_3'), activation=best_hyperparameters.get('activation_2')),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_2')),
+      Dense(units=best_hyperparameters.get('units_3'), activation=best_hyperparameters.get('activation_2')),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_2')),
+      Dense(units=best_hyperparameters.get('units_3'), activation=best_hyperparameters.get('activation_2')),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_2')),
+      Dense(units=best_hyperparameters.get('units_3'), activation=best_hyperparameters.get('activation_3')),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_4')),
+      Dense(units=one_hot_encoded_train.shape[1], activation=best_hyperparameters.get('activation_5'))
+    ])
+```
+
+Third Model:
+```
+final_model = Sequential([
+      Dense(units=best_hyperparameters.get('units_1'), activation=best_hyperparameters.get('activation_1'), input_shape=(concatenated_x_train.shape[1],)),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_1')),
+      Dense(units=best_hyperparameters.get('units_2'), activation=best_hyperparameters.get('activation_2')),
+      BatchNormalization(),
+      Dropout(best_hyperparameters.get('dropout_2')),
+      Dense(units=one_hot_encoded_train.shape[1], activation=best_hyperparameters.get('activation_5'))
+    ])
+```
 
 ## Results - 
 ### Data Exploration - 
