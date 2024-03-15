@@ -256,16 +256,197 @@ final_model = Sequential([
 ## Results - 
 ### Data Exploration - 
 Data Distribution:
+```
+Frequency Counts for Unique Categorical Feature Values:
+name:
+Rental unit in New York · 1 bedroom · 1 bed · 1 bath                    409
+Rental unit in New York · ★5.0 · 1 bedroom · 1 bed · 1 bath             235
+Rental unit in Brooklyn · 1 bedroom · 1 bed · 1 bath                    201
+Rental unit in Brooklyn · ★5.0 · 1 bedroom · 1 bed · 1 bath             173
+Rental unit in Brooklyn · 1 bedroom · 1 bed · 1 shared bath             158
+                                                                       ... 
+Rental unit in Brooklyn · ★4.52 · 1 bedroom · 3 beds · 1 bath             1
+Rental unit in Brooklyn · ★4.83 · 2 bedrooms · 1 bed · 1 shared bath      1
+Townhouse in Queens · ★4.33 · 2 bedrooms · 3 beds · 1 bath                1
+Rental unit in New York · ★4.50 · 1 bedroom · 1 bed · 1 private bath      1
+Rental unit in New York · ★4.46 · 1 bedroom · 2 beds · 1 bath             1
+Name: name, Length: 9836, dtype: int64
 
-Neighborhood Exploration:
+host_name:
+Jeniffer           184
+Urban Furnished    176
+Michael            148
+David              144
+Stay With Vibe     113
+                  ... 
+Maud                 1
+Raych                1
+Alessio              1
+Adrien               1
+Glenroy              1
+Name: host_name, Length: 5815, dtype: int64
 
-Pairplot:
-![image](https://github.com/pvijay03/CSE151A-Project/assets/97484172/5cd6127a-e9d8-4a35-8cc2-2e84f85661eb)
+neighbourhood_group:
+Manhattan        8038
+Brooklyn         7719
+Queens           3761
+Bronx             949
+Staten Island     291
+Name: neighbourhood_group, dtype: int64
+
+neighbourhood:
+Bedford-Stuyvesant            1586
+Harlem                        1063
+Williamsburg                   969
+Midtown                        942
+Hell's Kitchen                 867
+                              ... 
+Lighthouse Hill                  1
+Bay Terrace, Staten Island       1
+Navy Yard                        1
+Neponsit                         1
+Chelsea, Staten Island           1
+Name: neighbourhood, Length: 221, dtype: int64
+
+room_type:
+Entire home/apt    11549
+Private room        8804
+Shared room          293
+Hotel room           112
+Name: room_type, dtype: int64
+
+last_review:
+2023-09-04    326
+2023-12-03    255
+2023-12-17    244
+2023-09-05    223
+2023-11-30    212
+             ... 
+2021-11-03      1
+2016-07-31      1
+2021-05-16      1
+2021-02-03      1
+2019-07-11      1
+Name: last_review, Length: 1878, dtype: int64
+
+license:
+No License            17569
+Exempt                 2135
+OSE-STRREG-0000068       14
+OSE-STRREG-0008664        6
+OSE-STRREG-0000437        6
+                      ...  
+OSE-STRREG-0000131        1
+OSE-STRREG-0000288        1
+OSE-STRREG-0000215        1
+OSE-STRREG-0000985        1
+OSE-STRREG-0000513        1
+Name: license, Length: 879, dtype: int64
+
+rating:
+No rating    3593
+5.0          2882
+4.67          517
+4.75          469
+4.80          439
+             ... 
+4.02            1
+3.42            1
+3.73            1
+3.26            1
+2.75            1
+Name: rating, Length: 162, dtype: int64
+
+bedrooms:
+1         13439
+2          3602
+Studio     1815
+3          1394
+4           345
+5           112
+6            29
+7             9
+9             6
+8             5
+15            1
+14            1
+Name: bedrooms, dtype: int64
+
+baths:
+1                17015
+2                 2082
+1.5               1001
+2.5                240
+3                  171
+0                   82
+4                   69
+3.5                 50
+4.5                 18
+Not specified       13
+5                    6
+6                    4
+5.5                  2
+6.5                  2
+11.5                 1
+7                    1
+15.5                 1
+Name: baths, dtype: int64
+```
+
+[Neighborhood Exploration Example](https://github.com/pvijay03/CSE151A-Project/blob/main/neighborhooddist.png)
+
+[Pairplot](https://github.com/pvijay03/CSE151A-Project/blob/main/pairplot.png)
 
 ### Preprocessing -
-Cleaning Data:
+Cleaning Data: We were able to successfully remove all of the invalid data from our dataframe
+```
+Column 'id': 0 rows with 'Not specified' rawDataFrame
+Column 'name': 0 rows with 'Not specified' rawDataFrame
+Column 'host_id': 0 rows with 'Not specified' rawDataFrame
+Column 'host_name': 0 rows with 'Not specified' rawDataFrame
+Column 'neighbourhood_group': 0 rows with 'Not specified' rawDataFrame
+Column 'neighbourhood': 0 rows with 'Not specified' rawDataFrame
+Column 'latitude': 0 rows with 'Not specified' rawDataFrame
+Column 'longitude': 0 rows with 'Not specified' rawDataFrame
+Column 'room_type': 0 rows with 'Not specified' rawDataFrame
+Column 'price': 0 rows with 'Not specified' rawDataFrame
+Column 'minimum_nights': 0 rows with 'Not specified' rawDataFrame
+Column 'number_of_reviews': 0 rows with 'Not specified' rawDataFrame
+Column 'last_review': 0 rows with 'Not specified' rawDataFrame
+Column 'reviews_per_month': 0 rows with 'Not specified' rawDataFrame
+Column 'calculated_host_listings_count': 0 rows with 'Not specified' rawDataFrame
+Column 'availability_365': 0 rows with 'Not specified' rawDataFrame
+Column 'number_of_reviews_ltm': 0 rows with 'Not specified' rawDataFrame
+Column 'license': 0 rows with 'Not specified' rawDataFrame
+Column 'rating': 0 rows with 'Not specified' rawDataFrame
+Column 'bedrooms': 0 rows with 'Not specified' rawDataFrame
+Column 'beds': 0 rows with 'Not specified' rawDataFrame
+Column 'baths': 13 rows with 'Not specified' rawDataFrame
+Column 'log_price': 0 rows with 'Not specified' rawDataFrame
+```
 
 Scaling, Encoding, and Imputing (Transformations):
+
+[Example of New Scaled/Imputed Data](https://github.com/pvijay03/CSE151A-Project/blob/main/dataScaled.png)
+
+One-Hot Encoding:
+```
+ONE HOT ENCODED TEST
+       1  3  5  7  9
+7417   1  0  0  0  0
+4253   0  0  0  1  0
+12741  0  0  0  1  0
+14213  0  0  0  1  0
+6554   1  0  0  0  0
+...   .. .. .. .. ..
+3471   0  0  0  1  0
+15923  1  0  0  0  0
+6795   0  0  0  1  0
+4393   0  0  0  1  0
+8163   1  0  0  0  0
+
+[3402 rows x 5 columns]
+```
 
 ### Model 1 - 
 This model has a training accuracy of 0.1974, and a testing accuracy of 0.2031. While these accuracies aren't great, we intend on creating more complex models in future iterations which will, hopefully, perform better.
